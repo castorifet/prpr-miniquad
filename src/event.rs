@@ -176,6 +176,7 @@ pub trait EventHandler {
         _button: MouseButton,
         _x: f32,
         _y: f32,
+        _time : f64,
     ) {
     }
     fn mouse_button_up_event(
@@ -184,6 +185,7 @@ pub trait EventHandler {
         _button: MouseButton,
         _x: f32,
         _y: f32,
+        _time : f64,
     ) {
     }
 
