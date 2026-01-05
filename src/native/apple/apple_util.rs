@@ -406,10 +406,21 @@ pub unsafe fn superclass<'a>(this: &'a Object) -> &'a Class {
     let superclass: ObjcId = msg_send![this, superclass];
     &*(superclass as *const _)
 }
-
+#[cfg(target_os = "macos")]
 pub fn bottom_left_to_top_left(rect: NSRect) -> f64 {
     let height = unsafe { CGDisplayPixelsHigh(CGMainDisplayID()) };
     height as f64 - (rect.origin.y + rect.size.height)
+}
+#[cfg(target_os = "ios")]
+pub fn bottom_left_to_top_left(rect: NSRect) -> f64 {
+    use crate::native::apple::frameworks::*;
+
+    unsafe {
+        let screen: ObjcId = msg_send![class!(UIScreen), mainScreen];
+        let bounds: NSRect = msg_send![screen, bounds];
+        let height = bounds.size.height;
+        height as f64 - (rect.origin.y + rect.size.height)
+    }
 }
 
 pub fn load_mouse_cursor(cursor: CursorIcon) -> ObjcId {
